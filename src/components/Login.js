@@ -5,16 +5,15 @@ import { login } from '../store/authSlice';  // Import login action
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const dispatch = useDispatch();  // To dispatch actions
-  const navigate = useNavigate();  // To navigate to different pages
+  const dispatch = useDispatch();  
+  const navigate = useNavigate();  
 
-  const [email, setEmail] = useState('');  // Controlled input for email
-  const [password, setPassword] = useState('');  // Controlled input for password
-  const [error, setError] = useState('');  // To handle error messages
+  const [email, setEmail] = useState('');  
+  const [password, setPassword] = useState(''); 
+  const [error, setError] = useState(''); 
 
-  // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();  // Prevent form from refreshing the page
+    e.preventDefault(); 
 
     // Validate inputs
     if (!email || !password) {
@@ -27,16 +26,13 @@ const Login = () => {
       const response = await axios.post('https://101446598-comp-3123-assignment1.vercel.app/api/v1/user/login', { email, password });
 
       if (response.data.status) {
-        // Store the token in Redux
         dispatch(login(response.data.token));
         
-        // Save token to localStorage as well
         localStorage.setItem('token', response.data.token);
 
-        // Redirect to Employee List page
         navigate('/employees');
       } else {
-        setError(response.data.message);  // Show error message from API response
+        setError(response.data.message);  
       }
     } catch (err) {
       setError('Wrong email/password');
@@ -47,9 +43,9 @@ const Login = () => {
   return (
     <div>
       <h2>Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}  {/* Show error if any */}
+      {error && <p style={{ color: 'red' }}>{error}</p>} 
       
-      <form onSubmit={handleSubmit}>
+      <form >
         <input
           type="email"
           placeholder="Email"
@@ -64,7 +60,7 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Login</button>
+        <button type="submit" onClick={handleSubmit}>Login</button>
       </form>
     </div>
   );

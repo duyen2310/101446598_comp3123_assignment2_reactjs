@@ -6,7 +6,6 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import EmployeeList from './components/EmployeeList';
 import store from './store/store';
-import PrivateRoute from './routes/PrivateRoute';
 
 const App = () => {
   return (
@@ -18,9 +17,7 @@ const App = () => {
           <Route
             path="/employees"
             element={
-              <PrivateRoute>
                 <EmployeeList />
-              </PrivateRoute>
             }
           />
         </Routes>

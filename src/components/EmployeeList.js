@@ -1,44 +1,55 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { logout } from '../store/authSlice'; // Import the logout action
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext'; // Import AuthContext
 
 const EmployeeList = () => {
-  const { user } = useAuth(); // Access user from AuthContext
-  const navigate = useNavigate();
-
+  const dispatch = useDispatch(); // To dispatch Redux actions
+  const navigate = useNavigate(); // To navigate to different pages
   const [employees, setEmployees] = useState([]);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!user) {
-      navigate('/login'); // Redirect to login if not logged in
-      return;
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      navigate('/login');  // Redirect to login if no token
+    } else {
+      const fetchEmployees = async () => {
+        try {
+          const response = await axios.get('https://101446598-comp-3123-assignment1.vercel.app/api/v1/emp/employees');
+          console.log('API Response:', response);
+          setEmployees(response.data);  // Set the state with the employee data
+        } catch (err) {
+          setError('Failed to fetch employees');
+          console.error('Error fetching employees:', err);
+        }
+      };
+
+      fetchEmployees();
     }
+  }, [navigate]);
 
-    const token = localStorage.getItem('token'); // Retrieve the token
-    const fetchEmployees = async () => {
-      try {
-        const response = await axios.get(
-          'https://101446598-comp-3123-assignment1.vercel.app/api/v1/emp/employees',
-          {
-            headers: { Authorization: `Bearer ${token}` }, // Pass token in headers
-          }
-        );
-        setEmployees(response.data); // Set employee data
-      } catch (err) {
-        setError('Failed to fetch employees');
-        console.error('Error fetching employees:', err);
-      }
-    };
+  // Logout function
+  const handleLogout = () => {
+    // Dispatch logout action to clear token from Redux store
+    dispatch(logout());
 
-    fetchEmployees();
-  }, [user, navigate]); // Run the effect when user or navigate changes
+    // Remove the token from localStorage
+    localStorage.removeItem('token');
+
+    // Redirect to login page
+    navigate('/login');
+  };
 
   return (
     <div>
       <h2>Employee List</h2>
+      <button onClick={handleLogout}>Logout</button> {/* Logout button */}
+      
       {error && <p style={{ color: 'red' }}>{error}</p>}
+      
       <table>
         <thead>
           <tr>

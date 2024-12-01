@@ -38,24 +38,20 @@ const EmployeeList = () => {
     }
   }, [navigate]);
 
-  // Function to handle search input change
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);  // Update the search query state
+    setSearchQuery(e.target.value); 
   };
 
-  // Function to handle search button click
   const handleSearch = () => {
-    fetchEmployees(searchQuery);  // Fetch employees based on search query
+    fetchEmployees(searchQuery);  
   };
 
-  // Logout handler
   const handleLogout = () => {
     dispatch(logout());
     localStorage.removeItem('token');
     navigate('/login');
   };
 
-  // Delete employee handler
   const handleDeleteSuccess = () => {
     setEmployees(employees.filter(employee => employee._id !== selectedEmployeeId));
     setSelectedEmployeeId(null); 

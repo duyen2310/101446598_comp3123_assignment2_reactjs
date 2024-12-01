@@ -1,0 +1,68 @@
+/* src/components/LandingPage.css */
+.landing-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #ff9eaf, #ff77b4); /* Pink gradient background */
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    color: white;
+  }
+  
+  .landing-content {
+    background-color: rgba(255, 255, 255, 0.85); /* Light background with transparency */
+    padding: 50px;
+    border-radius: 15px;
+    width: 80%;
+    max-width: 450px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Soft shadow effect */
+  }
+  
+  .landing-content h1 {
+    font-size: 40px;
+    margin-bottom: 20px;
+    color: #ff6a8d; /* Soft pink color */
+  }
+  
+  .landing-content p {
+    font-size: 18px;
+    margin-bottom: 30px;
+    color: #666;
+  }
+  
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .btn {
+    padding: 12px 20px;
+    font-size: 18px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+  }
+  
+  .btn-login {
+    background-color: #ff77b4; /* Light pink button */
+    color: white;
+  }
+  
+  .btn-login:hover {
+    background-color: #ff4e88; /* Darker pink on hover */
+  }
+  
+  .btn-signup {
+    background-color: #ff9eaf; /* Lighter pink button */
+    color: white;
+  }
+  
+  .btn-signup:hover {
+    background-color: #ff74a3; /* Darker pink on hover */
+  }
+  

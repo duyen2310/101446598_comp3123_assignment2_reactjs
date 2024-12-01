@@ -1,16 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext'; // Import AuthContext
 
 const EmployeeList = () => {
+  const { user } = useAuth(); // Access user from AuthContext
+  const navigate = useNavigate();
+
   const [employees, setEmployees] = useState([]);
   const [error, setError] = useState('');
 
   useEffect(() => {
+    if (!user) {
+      navigate('/login'); // Redirect to login if not logged in
+      return;
+    }
+
+    const token = localStorage.getItem('token'); // Retrieve the token
     const fetchEmployees = async () => {
       try {
-        const response = await axios.get('https://101446598-comp-3123-assignment1.vercel.app/api/v1/emp/employees');  // Correct API endpoint
-        console.log('API Response:', response);  // Log the full response
-        setEmployees(response.data);  // Set the state with the employee data
+        const response = await axios.get(
+          'https://101446598-comp-3123-assignment1.vercel.app/api/v1/emp/employees',
+          {
+            headers: { Authorization: `Bearer ${token}` }, // Pass token in headers
+          }
+        );
+        setEmployees(response.data); // Set employee data
       } catch (err) {
         setError('Failed to fetch employees');
         console.error('Error fetching employees:', err);
@@ -18,7 +33,7 @@ const EmployeeList = () => {
     };
 
     fetchEmployees();
-  }, []);  // Empty dependency array ensures this runs once on component mount
+  }, [user, navigate]); // Run the effect when user or navigate changes
 
   return (
     <div>

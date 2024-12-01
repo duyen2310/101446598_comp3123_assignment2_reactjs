@@ -4,61 +4,108 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../store/authSlice'; 
 import { useNavigate } from 'react-router-dom';
 import DeleteEmployee from './Employee/DeleteEmployee';
+
 const EmployeeList = () => {
   const dispatch = useDispatch(); 
   const navigate = useNavigate(); 
   const [employees, setEmployees] = useState([]);
   const [error, setError] = useState('');
   const [selectedEmployeeId, setSelectedEmployeeId] = useState(null); 
+  const [searchQuery, setSearchQuery] = useState(''); // State for search query
+
+  // Function to fetch employees based on search query
+  const fetchEmployees = async (query = '') => {
+    try {
+      const url = query
+        ? `https://101446598-comp-3123-assignment1.vercel.app/api/v1/emp/employee/search?search=${query}`
+        : 'https://101446598-comp-3123-assignment1.vercel.app/api/v1/emp/employees'; 
+
+      const response = await axios.get(url);
+      setEmployees(response.data);  
+      setError('');
+    } catch (err) {
+      setError('Not Found Employees');
+      console.error('Error fetching employees:', err);
+    }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-
     if (!token) {
       navigate('/login');  
     } else {
-      const fetchEmployees = async () => {
-        try {
-          const response = await axios.get('https://101446598-comp-3123-assignment1.vercel.app/api/v1/emp/employees');
-          console.log('API Response:', response);
-          setEmployees(response.data);  
-        } catch (err) {
-          setError('Failed to fetch employees');
-          console.error('Error fetching employees:', err);
-        }
-      };
-
-      fetchEmployees();
+      fetchEmployees(); // Fetch employees on initial load
     }
   }, [navigate]);
-//LOGOUT
+
+  // Function to handle search input change
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);  // Update the search query state
+  };
+
+  // Function to handle search button click
+  const handleSearch = () => {
+    fetchEmployees(searchQuery);  // Fetch employees based on search query
+  };
+
+  // Logout handler
   const handleLogout = () => {
     dispatch(logout());
     localStorage.removeItem('token');
     navigate('/login');
   };
-//DELETE
+
+  // Delete employee handler
   const handleDeleteSuccess = () => {
-    // refresh the employee list after deletion
     setEmployees(employees.filter(employee => employee._id !== selectedEmployeeId));
-    setSelectedEmployeeId(null); // reset the selected employee ID
+    setSelectedEmployeeId(null); 
   };
 
   const handleDeleteClick = (id) => {
-    setSelectedEmployeeId(id); // set the selected employee ID
+    setSelectedEmployeeId(id); 
   };
 
-
-//ADD EMPLOYEE
+  // Add new employee handler
   const handleAddEmployee = () => {
     navigate('/employees/add');
   };
+
   return (
     <div>
       <h2>Employee List</h2>
-      <button onClick={handleLogout}>Logout</button> {/* Logout button */}
-      
+      <button onClick={handleLogout}>Logout</button> 
+
       {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      {/* Search Bar */}
+      <div>
+        <input
+          type="text"
+          placeholder="Search employees by name, email, position..."
+          value={searchQuery}
+          onChange={handleSearchChange} // Update search query on change
+          style={{
+            padding: '8px',
+            width: '300px',
+            marginBottom: '20px',
+            borderRadius: '4px',
+            border: '1px solid #ccc',
+          }}
+        />
+        <button 
+          onClick={handleSearch} 
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            marginLeft: '10px'
+          }}
+        >
+          Search
+        </button>
+      </div>
 
       {/* Table for Employee Data */}
       <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
@@ -74,7 +121,9 @@ const EmployeeList = () => {
           {employees.length > 0 ? (
             employees.map((employee) => (
               <tr key={employee._id} style={{ textAlign: 'left' }}>
-                <td style={{ padding: '8px', border: '1px solid #ddd' }}>{employee.first_name} {employee.last_name}</td>
+                <td style={{ padding: '8px', border: '1px solid #ddd' }}>
+                  {employee.first_name} {employee.last_name}
+                </td>
                 <td style={{ padding: '8px', border: '1px solid #ddd' }}>{employee.position}</td>
                 <td style={{ padding: '8px', border: '1px solid #ddd' }}>{employee.department}</td>
                 <td style={{ padding: '8px', border: '1px solid #ddd' }}>
@@ -106,6 +155,7 @@ const EmployeeList = () => {
           )}
         </tbody>
       </table>
+
       <button onClick={handleAddEmployee}>Add New Employee</button>
 
       {/* Conditional rendering of DeleteEmployee */}

@@ -1,7 +1,7 @@
-// src/pages/SignupPage.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import './style/Signup.css';  
 
 const Signup = () => {
   const [username, setUsername] = useState('');
@@ -21,9 +21,8 @@ const Signup = () => {
     try {
       const response = await axios.post('https://101446598-comp-3123-assignment1.vercel.app/api/v1/user/signup', { username, email, password });
       if (response.data.user_id) {
-        navigate('/login');  // Redirect to login page after successful signup
-      } else {
-        setError(response.data.message);  // Show error message
+        navigate('/login');  
+        setError(response.data.message); 
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
@@ -31,33 +30,35 @@ const Signup = () => {
   };
 
   return (
-    <div>
-      <h2>Signup</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleSignup}>
-        <input 
-          type="text" 
-          placeholder="Username" 
-          value={username} 
-          onChange={(e) => setUsername(e.target.value)} 
-          required 
-        />
-        <input 
-          type="email" 
-          placeholder="Email" 
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)} 
-          required 
-        />
-        <input 
-          type="password" 
-          placeholder="Password" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
-          required 
-        />
-        <button type="submit">Signup</button>
-      </form>
+    <div className="signup-page">
+      <div className="signup-form-container">
+        <h2>Signup</h2>
+        {error && <p className="error-message">{error}</p>}  {/* Error message styling */}
+        <form onSubmit={handleSignup}>
+          <input 
+            type="text" 
+            placeholder="Username" 
+            value={username} 
+            onChange={(e) => setUsername(e.target.value)} 
+            required 
+          />
+          <input 
+            type="email" 
+            placeholder="Email" 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
+            required 
+          />
+          <input 
+            type="password" 
+            placeholder="Password" 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)} 
+            required 
+          />
+          <button type="submit">Signup</button>
+        </form>
+      </div>
     </div>
   );
 };

@@ -1,9 +1,14 @@
+// src/pages/EmployeeList.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { logout } from '../store/authSlice'; 
 import { useNavigate } from 'react-router-dom';
 import DeleteEmployee from './Employee/DeleteEmployee';
+import './style/EmployeeList.css';  // Import the updated CSS
+
+// Font Awesome imports for icons
+import { FaSearch, FaEye, FaEdit, FaTrash } from 'react-icons/fa';
 
 const EmployeeList = () => {
   const dispatch = useDispatch(); 
@@ -11,7 +16,7 @@ const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
   const [error, setError] = useState('');
   const [selectedEmployeeId, setSelectedEmployeeId] = useState(null); 
-  const [searchQuery, setSearchQuery] = useState(''); // State for search query
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Function to fetch employees based on search query
   const fetchEmployees = async (query = '') => {
@@ -67,92 +72,79 @@ const EmployeeList = () => {
   };
 
   return (
-    <div>
+    <div className="employee-list-container">
       <h2>Employee List</h2>
-      <button onClick={handleLogout}>Logout</button> 
+
+      {/* Logout Button */}
+      <button onClick={handleLogout} className="logout-button">Logout</button> 
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {/* Search Bar */}
-      <div>
+      <div className="search-container">
         <input
           type="text"
           placeholder="Search employees by name, email, position..."
           value={searchQuery}
-          onChange={handleSearchChange} // Update search query on change
-          style={{
-            padding: '8px',
-            width: '300px',
-            marginBottom: '20px',
-            borderRadius: '4px',
-            border: '1px solid #ccc',
-          }}
+          onChange={handleSearchChange} 
+          className="search-input"
         />
         <button 
           onClick={handleSearch} 
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#4CAF50',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            marginLeft: '10px'
-          }}
+          className="search-button"
         >
-          Search
+          <FaSearch /> {/* Search Icon */}
         </button>
       </div>
 
       {/* Table for Employee Data */}
-      <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+      <table>
         <thead>
-          <tr style={{ backgroundColor: '#f4f4f4', textAlign: 'left' }}>
-            <th style={{ padding: '8px', border: '1px solid #ddd' }}>Name</th>
-            <th style={{ padding: '8px', border: '1px solid #ddd' }}>Position</th>
-            <th style={{ padding: '8px', border: '1px solid #ddd' }}>Department</th>
-            <th style={{ padding: '8px', border: '1px solid #ddd' }}>Actions</th>
+          <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Department</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {employees.length > 0 ? (
             employees.map((employee) => (
-              <tr key={employee._id} style={{ textAlign: 'left' }}>
-                <td style={{ padding: '8px', border: '1px solid #ddd' }}>
-                  {employee.first_name} {employee.last_name}
-                </td>
-                <td style={{ padding: '8px', border: '1px solid #ddd' }}>{employee.position}</td>
-                <td style={{ padding: '8px', border: '1px solid #ddd' }}>{employee.department}</td>
-                <td style={{ padding: '8px', border: '1px solid #ddd' }}>
+              <tr key={employee._id}>
+                <td>{employee.first_name} {employee.last_name}</td>
+                <td>{employee.position}</td>
+                <td>{employee.department}</td>
+                <td>
                   <button
                     onClick={() => navigate(`/employees/view/${employee._id}`)}
-                    style={{ marginRight: '10px', padding: '5px 10px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px' }}
+                    className="view-button"
                   >
-                    View
+                    <FaEye /> View
                   </button>
                   <button
                     onClick={() => navigate(`/employees/edit/${employee._id}`)}
-                    style={{ marginRight: '10px', padding: '5px 10px', backgroundColor: '#FFA500', color: 'white', border: 'none', borderRadius: '4px' }}
+                    className="edit-button"
                   >
-                    Edit
+                    <FaEdit /> Edit
                   </button>
                   <button
-                    onClick={() => handleDeleteClick(employee._id)} // Open delete modal
-                    style={{ padding: '5px 10px', backgroundColor: '#f44336', color: 'white', border: 'none', borderRadius: '4px' }}
+                    onClick={() => handleDeleteClick(employee._id)} 
+                    className="delete-button"
                   >
-                    Delete
+                    <FaTrash /> Delete
                   </button>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="4" style={{ textAlign: 'center', padding: '8px' }}>No employees found</td>
+              <td colSpan="4" className="no-employees">No employees found</td>
             </tr>
           )}
         </tbody>
       </table>
 
-      <button onClick={handleAddEmployee}>Add New Employee</button>
+      <button onClick={handleAddEmployee} className="add-employee-button">Add New Employee</button>
 
       {/* Conditional rendering of DeleteEmployee */}
       {selectedEmployeeId && (

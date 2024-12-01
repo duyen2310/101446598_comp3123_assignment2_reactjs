@@ -21,22 +21,70 @@ const ViewEmployee = () => {
   }, [id]);
 
   return (
-    <div>
-      <h2>Employee Details</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+    <div style={styles.container}>
+      <h2 style={styles.header}>Employee Details</h2>
+      {error && <p style={styles.error}>{error}</p>}
       {employee ? (
-        <div>
-          <p>Name: {employee.first_name} {employee.last_name}</p>
-          <p>Email: {employee.email}</p>
-          <p>Position: {employee.position}</p>
-          <p>Salary: {employee.salary}</p>
-          <p>Department: {employee.department}</p>
+        <div style={styles.card}>
+          <div style={styles.field}>
+            <strong>Name:</strong> {employee.first_name} {employee.last_name}
+          </div>
+          <div style={styles.field}>
+            <strong>Email:</strong> {employee.email}
+          </div>
+          <div style={styles.field}>
+            <strong>Position:</strong> {employee.position}
+          </div>
+          <div style={styles.field}>
+            <strong>Salary:</strong> ${employee.salary.toLocaleString()}
+          </div>
+          <div style={styles.field}>
+            <strong>Department:</strong> {employee.department}
+          </div>
         </div>
       ) : (
-        <p>Loading...</p>
+        <p style={styles.loading}>Loading...</p>
       )}
     </div>
   );
+};
+
+const styles = {
+  container: {
+    maxWidth: '600px',
+    margin: '20px auto',
+    padding: '20px',
+    borderRadius: '8px',
+    backgroundColor: '#fce4ec', // Light pastel pink background
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+  },
+  header: {
+    fontSize: '24px',
+    marginBottom: '20px',
+    textAlign: 'center',
+    color: '#ad1457', // Deep pink for header
+  },
+  card: {
+    padding: '20px',
+    borderRadius: '8px',
+    backgroundColor: '#ffffff', // White card background
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+  },
+  field: {
+    marginBottom: '10px',
+    fontSize: '16px',
+    color: '#424242', // Neutral text color for readability
+  },
+  error: {
+    color: 'red',
+    textAlign: 'center',
+    marginBottom: '20px',
+  },
+  loading: {
+    textAlign: 'center',
+    fontSize: '16px',
+    color: '#757575', // Subtle grey for loading text
+  },
 };
 
 export default ViewEmployee;
